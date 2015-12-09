@@ -11,23 +11,23 @@
 
     <TextView android:text="Lat/Lon" android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:id="@+id/lat_long_caption"/>
-    <EditText android:hint="Longitude" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_below="@id/lat_long_caption" android:id="@+id/longitude"/>
     <EditText android:hint="Lattitude" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_below="@id/longitude" android:id="@+id/latitude"/>
+        android:layout_height="wrap_content" android:layout_below="@id/lat_long_caption" android:id="@+id/latitude"/>
+    <EditText android:hint="Longitude" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_below="@id/latitude" android:id="@+id/longitude"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Service"
         android:onClick="startService"
-        android:layout_below="@id/latitude"
+        android:layout_below="@id/longitude"
         android:id="@+id/update_position"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop Service"
         android:onClick="stopService"
-        android:layout_below="@id/latitude"
+        android:layout_below="@id/longitude"
         android:layout_toRightOf="@id/update_position"
         android:id="@+id/stop_server"/>
 

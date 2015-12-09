@@ -14,10 +14,10 @@ import android.util.Log;
  * Created by chris.teli on 11/9/2015.
  */
 public class MockLocationProvider extends Service {
+    static double lon = 0.0, lat = 0.0;
     String providerName;
     Context ctx;
-    LocationManager mLocationManager;
-
+    LocationManagerHandler mLocationManager;
     /**
      * indicates how to behave if the service is killed
      */
@@ -49,26 +49,15 @@ public class MockLocationProvider extends Service {
         this.providerName = LocationManager.GPS_PROVIDER;
         this.ctx = this;
 
-        Log.i("LocalService", "Received start id " + startId + ": " + intent);
+        Log.i("MockLocationProvider", "Received start id " + startId + ": " + intent);
+        Log.i("MockLocationProvider", "Lat " + lat+ ": lon " + lon);
 
-        mLocationManager = (LocationManager) ctx.getSystemService(
-                Context.LOCATION_SERVICE);
+        mLocationManager = new LocationManagerHandler(ctx,lat,lon);
 
-        double lat = 35.05;
-        double lon = -117.01;
-        int counter=0;
-        while(counter < 1000) {
-            setMockLocation(lat,lon);
-            lat = lat + 0.2;
-            try {
-                Thread.sleep(500);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            counter++;
-        }
+
+        // Run LocaltionManagerHandler
+        mLocationManager.run();
         return mStartMode;
-
     }
 
     /**
@@ -103,89 +92,7 @@ public class MockLocationProvider extends Service {
         shutdown();
     }
 
-    private void setMockLocation(double lat, double lon) {
-        if (mLocationManager.getProvider(LocationManager.GPS_PROVIDER) != null) {
-            //mLocationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
-        }
-
-        mLocationManager.addTestProvider
-                (
-                        LocationManager.GPS_PROVIDER,
-                        "requiresNetwork" == "",
-                        "requiresSatellite" == "",
-                        "requiresCell" == "",
-                        "hasMonetaryCost" == "",
-                        "supportsAltitude" == "",
-                        "supportsSpeed" == "",
-                        "supportsBearing" == "",
-
-                        android.location.Criteria.POWER_LOW,
-                        android.location.Criteria.ACCURACY_FINE
-                );
-
-        Location newLocation = new Location(LocationManager.GPS_PROVIDER);
-
-
-        newLocation.setLatitude(lat);
-        newLocation.setLongitude(lon);
-
-        newLocation.setAccuracy(500);
-        newLocation.setTime(System.currentTimeMillis());
-
-        mLocationManager.setTestProviderEnabled
-                (
-                        LocationManager.GPS_PROVIDER,
-                        true
-                );
-
-        mLocationManager.setTestProviderStatus
-                (
-                        LocationManager.GPS_PROVIDER,
-                        LocationProvider.AVAILABLE,
-                        null,
-                        System.currentTimeMillis()
-                );
-
-
-        newLocation.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
-        /*
-        Method method;
-        try {
-            method = Location.class.getMethod("makeComplete", new Class[0]);
-            if (method != null) {
-                try {
-                    Log.d("Mock GPS", "Invoking makeComplete");
-                    method.invoke(newLocation, new Object[0]);
-                } catch (Exception exception) {
-                    Log.d("Mock GPS", "Could not invoke message");
-                }
-            }
-        } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-       */
-        mLocationManager.setTestProviderLocation
-                (
-                        LocationManager.GPS_PROVIDER,
-                        newLocation
-                );
-
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-
-        }
-
-    }
-
-    public void pushLocation(double lat, double lon) {
-        setMockLocation(lat, lon);
-    }
-
     public void shutdown() {
-        if (mLocationManager.getProvider(LocationManager.GPS_PROVIDER) != null) {
-            mLocationManager.removeTestProvider(LocationManager.GPS_PROVIDER);
-        }
+        mLocationManager.shutdown();
     }
 }

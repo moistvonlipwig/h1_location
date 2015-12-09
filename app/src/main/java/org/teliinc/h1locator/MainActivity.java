@@ -1,22 +1,13 @@
 package org.teliinc.h1locator;
 
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -27,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Mock location
     MockLocationProvider mock;
-
     String s_latitude="21.44";
     String s_longitude="-157.78";
 
@@ -42,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+
+        etLongitude.setText("-117.42");
+        etLatitude.setText("33.33");
     }
 
     @Override
@@ -73,7 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
     // Method to start the service
     public void startService(View view) {
-        startService(new Intent(getBaseContext(), MockLocationProvider.class));
+        MockLocationProvider.lat = Double.parseDouble(etLatitude.getText().toString());
+        MockLocationProvider.lon = Double.parseDouble(etLongitude.getText().toString());
+
+        // If service is running stop it
+        stopService(new Intent(getBaseContext(), MockLocationProvider.class));
+
+        Intent intent = new Intent(getBaseContext(), MockLocationProvider.class);
+        startService(intent);
     }
 
     // Method to stop the service
