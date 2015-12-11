@@ -30,5 +30,13 @@
         android:layout_below="@id/longitude"
         android:layout_toRightOf="@id/update_position"
         android:id="@+id/stop_server"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:onClick="connectToHost"
+        android:layout_below="@id/longitude"
+        android:layout_toRightOf="@id/stop_server"
+        android:id="@+id/connect"/>
 
 </RelativeLayout>
